@@ -1,0 +1,19 @@
+package local:shell
+
+interface runtime-component {
+  resource component {
+    constructor (url: string, pwd: option<string>, env: option<list<tuple<string, string>>>, args: option<list<string>>)
+    run-cmd: func () -> result<u32, string>
+  }
+}
+
+world shell {
+  import runtime-component
+
+  export shell: interface {
+    use runtime-component.{component}
+    init: func () -> result<_, string>
+    execute: func (line: string) -> result<option<component>, string>
+    execute-component: func (component: component) -> result<_, string>
+  }
+}
