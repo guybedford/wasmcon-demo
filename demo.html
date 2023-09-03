@@ -17,8 +17,7 @@
       "@bytecodealliance/preview2-shim/logging": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/logging.js",
       "@bytecodealliance/preview2-shim/poll": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/poll.js",
       "@bytecodealliance/preview2-shim/random": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/random.js",
-      "@bytecodealliance/preview2-shim/sockets": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/sockets.js",
-      "@bytecodealliance/jco": "./node_modules/@bytecodealliance/jco/src/browser.js"
+      "@bytecodealliance/preview2-shim/sockets": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/sockets.js"
     }
   }
   </script>
@@ -32,11 +31,7 @@
       'WasmCon Demo CLI> ',
       document.querySelector('.terminal'),
       async function (line) {
-        const maybeRuntimeComponent = shell.execute(line);
-        if (maybeRuntimeComponent) {
-          await maybeRuntimeComponent.initialize();
-          shell.executeComponent(maybeRuntimeComponent);
-        }
+        shell.execute(line);
       }
     );
     setStdout({

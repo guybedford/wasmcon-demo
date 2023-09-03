@@ -1,4 +1,3 @@
-import { LocalShellRuntimeComponent } from './imports/local-shell-runtime-component';
 import { WasiCliEnvironment } from './imports/wasi-cli-environment';
 import { WasiCliExit } from './imports/wasi-cli-exit';
 import { WasiCliStderr } from './imports/wasi-cli-stderr';
@@ -9,7 +8,6 @@ import { WasiCliTerminalOutput } from './imports/wasi-cli-terminal-output';
 import { WasiCliTerminalStderr } from './imports/wasi-cli-terminal-stderr';
 import { WasiCliTerminalStdin } from './imports/wasi-cli-terminal-stdin';
 import { WasiCliTerminalStdout } from './imports/wasi-cli-terminal-stdout';
-import { WasiClocksWallClock } from './imports/wasi-clocks-wall-clock';
 import { WasiFilesystemPreopens } from './imports/wasi-filesystem-preopens';
 import { WasiFilesystemTypes } from './imports/wasi-filesystem-types';
 import { WasiIoStreams } from './imports/wasi-io-streams';
