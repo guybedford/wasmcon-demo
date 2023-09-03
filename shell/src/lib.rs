@@ -1,5 +1,4 @@
 use std::collections::BTreeMap;
-use std::env;
 use std::error::Error;
 use std::fs;
 use std::io::{stdout, Error as IoError, Write};
@@ -23,6 +22,10 @@ static mut COMMANDS: BTreeMap<String, String> = BTreeMap::new();
 fn commands() -> &'static mut BTreeMap<String, String> {
     unsafe { &mut COMMANDS }
 }
+static mut ENV: Vec<(String, String)> = Vec::new();
+fn env() -> &'static mut Vec<(String, String)> {
+    unsafe { &mut ENV }
+}
 
 struct ShellComponent;
 
@@ -35,6 +38,26 @@ impl Guest for ShellComponent {
 
     fn execute(line: String) -> Result<Option<Component>, String> {
         let args: Vec<String> = line.split(' ').map(|arg| arg.into()).collect();
+        let mut args = args.as_slice();
+
+        let mut cur_env = env().clone();
+        while args.len() > 0 && args[0].contains('=') {
+            let assignment = &args[0];
+            args = &args[1..];
+            let eq_idx = assignment.find('=').unwrap();
+            let key = &assignment[0..eq_idx];
+            let val = &assignment[eq_idx + 1..];
+            cur_env.push((key.to_string(), val.to_string()));
+        }
+        if args.len() == 0 {
+            env().append(&mut cur_env);
+        }
+
+        let args: Vec<String> = args
+            .to_vec()
+            .drain(..)
+            .map(|arg| replace_env_vars(arg, &env()))
+            .collect();
 
         let Some(cmd) = args.get(0) else {
             return Ok(None);
@@ -54,12 +77,7 @@ impl Guest for ShellComponent {
             let cmd = Component::new(
                 cmd_url,
                 Some(pwd),
-                Some(
-                    env::vars()
-                        .into_iter()
-                        .collect::<Vec<(String, String)>>()
-                        .as_slice(),
-                ),
+                Some(env().as_slice()),
                 Some(args.as_slice()),
             );
             return Ok(Some(cmd));
@@ -119,4 +137,24 @@ fn resolve(path: &mut String, to: &str) {
         }
         path.push_str(segment);
     }
+}
+
+fn replace_env_vars(arg: String, env: &Vec<(String, String)>) -> String {
+    if arg.find('$').is_none() {
+        return arg;
+    }
+    let mut out_arg = arg;
+    for (name, value) in env {
+        if !out_arg.contains(name) {
+            continue;
+        }
+        let env_str = format!("${name}");
+        if out_arg.contains(&env_str) {
+            out_arg = out_arg.replace(&env_str, &value);
+            if out_arg.find('$').is_none() {
+                return out_arg;
+            }
+        }
+    }
+    out_arg
 }
