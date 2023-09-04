@@ -2,3 +2,5 @@ package-lock.json
 node_modules
 shell/target
 shell/wit/deps
+commands
+reactors
