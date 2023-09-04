@@ -23,7 +23,7 @@
   }
   </script>
   <script type="module">
-    import { setStdout, setStderr } from '@bytecodealliance/preview2-shim/io';
+    import { _setStdout, _setStderr } from '@bytecodealliance/preview2-shim/io';
     import { createTerminal } from './src/terminal.js';
     import { shell } from './shell/lib/shell.js';
 
@@ -39,13 +39,13 @@
         }
       }
     );
-    setStdout({
+    _setStdout({
       write (buf) {
         term.write(buf);
         return buf.byteLength;
       }
     });
-    setStderr({
+    _setStderr({
       write (buf) {
         term.write(buf);
         return buf.byteLength;
