@@ -1,3 +1,3 @@
 cargo build --release --target wasm32-wasi
 jco new target/wasm32-wasi/release/shell.wasm --wasi-reactor -o shell.wasm
-jco transpile shell.wasm -o lib --map local:shell/runtime-component=../../src/runtime-component.js
+jco transpile shell.wasm -o lib
