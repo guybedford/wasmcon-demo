@@ -1,3 +1,5 @@
+use std::fs;
+
 use exports::shell::Guest;
 
 wit_bindgen::generate!({
@@ -11,6 +13,7 @@ struct ShellComponent;
 
 impl Guest for ShellComponent {
     fn init() -> Result<(), String> {
+        fs::write("/dummy.wasm", include_bytes!("../dummy.wasm")).unwrap();
         Ok(())
     }
 
